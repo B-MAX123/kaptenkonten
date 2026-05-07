@@ -3,153 +3,207 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KaptenKonten.ai — AI Copywriting & Caption Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KaptenKonten.ai — AI Copywriting Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
 
-    <header class="header">
-      <div class="logo">
-        <div class="logo-icon"><i class="ti ti-writing"></i></div>
-        <div class="logo-text">Kapten<span>Konten</span>.ai</div>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="logo-mark">K</div>
+        <span class="logo-name">KaptenKonten<span class="logo-dot">.ai</span></span>
       </div>
-      <p class="tagline">AI Copywriting & Caption Generator Bahasa Indonesia</p>
-    </header>
-
-    <!-- MODE TABS -->
-    <div class="mode-tabs">
-      <button class="mode-tab active" data-mode="caption"><i class="ti ti-writing-sign"></i> Caption Organik</button>
-      <button class="mode-tab" data-mode="ads"><i class="ti ti-speakerphone"></i> Ads Copywriting</button>
+      <div class="nav-badge">Beta</div>
     </div>
+  </nav>
 
-    <!-- CAPTION MODE -->
-    <div id="captionMode" class="mode-content">
-      <div class="card">
-        <div class="section-label">Platform</div>
-        <div class="platform-grid">
-          <button class="platform-btn active" data-platform="Instagram"><i class="ti ti-brand-instagram"></i><span>Instagram</span></button>
-          <button class="platform-btn" data-platform="TikTok"><i class="ti ti-brand-tiktok"></i><span>TikTok</span></button>
-          <button class="platform-btn" data-platform="Facebook"><i class="ti ti-brand-facebook"></i><span>Facebook</span></button>
-          <button class="platform-btn" data-platform="Twitter/X"><i class="ti ti-brand-x"></i><span>Twitter/X</span></button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="section-label">Tone / Gaya Bahasa</div>
-        <div class="tone-grid">
-          <button class="tone-btn active" data-tone="Santai & Friendly"><div class="tone-name">Santai</div><div class="tone-desc">Casual, akrab</div></button>
-          <button class="tone-btn" data-tone="Profesional"><div class="tone-name">Profesional</div><div class="tone-desc">Formal, terpercaya</div></button>
-          <button class="tone-btn" data-tone="Lucu & Playful"><div class="tone-name">Lucu</div><div class="tone-desc">Humor, receh</div></button>
-          <button class="tone-btn" data-tone="Inspiratif & Motivasi"><div class="tone-name">Inspiratif</div><div class="tone-desc">Motivasi, touching</div></button>
-          <button class="tone-btn" data-tone="Jualan / Promosi"><div class="tone-name">Promosi</div><div class="tone-desc">CTA, jualan</div></button>
-          <button class="tone-btn" data-tone="Storytelling"><div class="tone-name">Storytelling</div><div class="tone-desc">Cerita, narrative</div></button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="section-label">Informasi Konten</div>
-        <textarea id="captionTopic" rows="3" maxlength="500" placeholder="Jelaskan produk, topik, atau momen yang ingin dibuat caption-nya...&#10;Contoh: launching skincare untuk kulit berminyak, harga 89rb"></textarea>
-        <div class="char-count"><span id="captionCharCount">0</span>/500</div>
-        <div class="row">
-          <select id="emojiSelect"><option value="dengan emoji">Pakai Emoji</option><option value="tanpa emoji">Tanpa Emoji</option></select>
-          <select id="hashtagSelect"><option value="dengan hashtag yang relevan">Pakai Hashtag</option><option value="tanpa hashtag">Tanpa Hashtag</option></select>
-        </div>
-      </div>
-      <button class="generate-btn" id="captionBtn"><i class="ti ti-sparkles"></i> Generate 3 Caption Sekarang</button>
-      <div id="captionResults" class="results">
-        <div class="empty-state"><i class="ti ti-writing-sign"></i><p>Caption kamu akan muncul di sini</p></div>
-      </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">✦ Powered by Claude AI</div>
+    <h1 class="hero-title">Copy yang <em>Convert</em>,<br>Dibuat dalam Detik</h1>
+    <p class="hero-sub">Generate caption organik & ads copywriting untuk semua platform — dalam Bahasa Indonesia yang natural dan siap pakai.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">4</span><span class="stat-label">Platform Ads</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">10+</span><span class="stat-label">Format Iklan</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Generate</span></div>
     </div>
+  </section>
 
-    <!-- ADS MODE -->
-    <div id="adsMode" class="mode-content" style="display:none;">
+  <!-- APP WRAPPER -->
+  <main class="app-wrapper">
 
-      <div class="ads-platform-tabs">
-        <button class="ads-tab active" data-ads="facebook"><i class="ti ti-brand-facebook"></i> Facebook</button>
-        <button class="ads-tab" data-ads="tiktok"><i class="ti ti-brand-tiktok"></i> TikTok</button>
-        <button class="ads-tab" data-ads="google"><i class="ti ti-brand-google"></i> Google</button>
-        <button class="ads-tab" data-ads="snack"><i class="ti ti-device-mobile-filled"></i> SnackVideo</button>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Mode</div>
+        <button class="sidebar-btn active" data-mode="caption">
+          <i class="ti ti-writing-sign"></i>
+          <div>
+            <div class="sbtn-title">Caption Organik</div>
+            <div class="sbtn-sub">IG, TikTok, FB, X</div>
+          </div>
+        </button>
+        <button class="sidebar-btn" data-mode="ads">
+          <i class="ti ti-speakerphone"></i>
+          <div>
+            <div class="sbtn-title">Ads Copywriting</div>
+            <div class="sbtn-sub">FB, TikTok, Google, Snack</div>
+          </div>
+        </button>
       </div>
 
-      <div class="card">
-        <div class="section-label">Informasi Produk / Layanan</div>
-        <div class="input-stack">
-          <input type="text" id="adsProduct" placeholder="Nama produk (contoh: Serum Vitamin C Glow 30ml)" maxlength="100">
-          <textarea id="adsDesc" rows="2" maxlength="300" placeholder="Keunggulan, target audience, harga (contoh: kulit glowing 7 hari, usia 20-35, harga 89rb)"></textarea>
-          <input type="text" id="adsCTA" placeholder="Call to Action (contoh: Beli Sekarang, Daftar Gratis)" maxlength="50">
+      <div class="sidebar-section" id="adsPlatformNav" style="display:none;">
+        <div class="sidebar-label">Platform Ads</div>
+        <button class="sidebar-platform active" data-ads="facebook"><i class="ti ti-brand-facebook"></i> Facebook Ads</button>
+        <button class="sidebar-platform" data-ads="tiktok"><i class="ti ti-brand-tiktok"></i> TikTok Ads</button>
+        <button class="sidebar-platform" data-ads="google"><i class="ti ti-brand-google"></i> Google Ads</button>
+        <button class="sidebar-platform" data-ads="snack"><i class="ti ti-device-mobile-filled"></i> SnackVideo Ads</button>
+      </div>
+
+      <div class="sidebar-tip">
+        <i class="ti ti-bulb"></i>
+        <p>Semakin detail deskripsi produkmu, semakin bagus hasil AI-nya.</p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- ===== CAPTION MODE ===== -->
+      <div id="captionMode" class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Caption Organik</h2>
+          <p class="panel-sub">Generate 3 variasi caption siap posting</p>
         </div>
-      </div>
 
-      <!-- Facebook Options -->
-      <div class="ads-options active" id="facebookOptions">
-        <div class="card">
-          <div class="section-label">Format Facebook Ads</div>
-          <div class="format-grid">
-            <button class="format-btn active" data-format="Primary Text (teks utama iklan feed)">Primary Text</button>
-            <button class="format-btn" data-format="Headline + Description (iklan dengan judul singkat dan deskripsi)">Headline + Desc</button>
-            <button class="format-btn" data-format="Carousel Copy (teks untuk setiap slide carousel)">Carousel</button>
-            <button class="format-btn" data-format="Video Ad Script (skrip video iklan Facebook 30-60 detik)">Video Script</button>
+        <div class="field-group">
+          <label class="field-label">Platform</label>
+          <div class="chip-grid">
+            <button class="chip active" data-platform="Instagram"><i class="ti ti-brand-instagram"></i> Instagram</button>
+            <button class="chip" data-platform="TikTok"><i class="ti ti-brand-tiktok"></i> TikTok</button>
+            <button class="chip" data-platform="Facebook"><i class="ti ti-brand-facebook"></i> Facebook</button>
+            <button class="chip" data-platform="Twitter/X"><i class="ti ti-brand-x"></i> Twitter/X</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Gaya Bahasa</label>
+          <div class="tone-list">
+            <button class="tone-chip active" data-tone="Santai & Friendly">Santai</button>
+            <button class="tone-chip" data-tone="Profesional">Profesional</button>
+            <button class="tone-chip" data-tone="Lucu & Playful">Lucu</button>
+            <button class="tone-chip" data-tone="Inspiratif & Motivasi">Inspiratif</button>
+            <button class="tone-chip" data-tone="Jualan / Promosi">Promosi</button>
+            <button class="tone-chip" data-tone="Storytelling">Storytelling</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Deskripsi Konten</label>
+          <textarea id="captionTopic" class="textarea" rows="4" maxlength="500" placeholder="Ceritakan produk, momen, atau topik yang ingin dibuat caption-nya...&#10;&#10;Contoh: Launching serum vitamin C untuk kulit kusam dan berminyak, harga 89rb, beli 2 gratis ongkir"></textarea>
+          <div class="field-footer">
+            <span id="captionCharCount">0</span>/500 karakter
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Emoji</label>
+            <select id="emojiSelect" class="select">
+              <option value="dengan emoji">Pakai Emoji</option>
+              <option value="tanpa emoji">Tanpa Emoji</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Hashtag</label>
+            <select id="hashtagSelect" class="select">
+              <option value="dengan hashtag yang relevan">Pakai Hashtag</option>
+              <option value="tanpa hashtag">Tanpa Hashtag</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="cta-btn" id="captionBtn">
+          <i class="ti ti-sparkles"></i> Generate Caption Sekarang
+        </button>
+
+        <div id="captionResults" class="results-area">
+          <div class="empty-state">
+            <div class="empty-icon"><i class="ti ti-writing-sign"></i></div>
+            <p>Caption kamu akan muncul di sini</p>
           </div>
         </div>
       </div>
 
-      <!-- TikTok Options -->
-      <div class="ads-options" id="tiktokOptions">
-        <div class="card">
-          <div class="section-label">Format TikTok Ads</div>
-          <div class="format-grid">
-            <button class="format-btn active" data-format="Hook + Script (opening hook kuat + skrip video 15-30 detik)">Hook + Script</button>
-            <button class="format-btn" data-format="UGC Style (skrip iklan gaya konten organik/user generated)">UGC Style</button>
-            <button class="format-btn" data-format="Trending Sound Script (skrip yang cocok dengan audio trending TikTok)">Trending Sound</button>
-            <button class="format-btn" data-format="TopView Ad (skrip iklan full-screen yang muncul pertama kali)">TopView</button>
+      <!-- ===== ADS MODE ===== -->
+      <div id="adsMode" class="panel" style="display:none;">
+        <div class="panel-header">
+          <h2 class="panel-title" id="adsPanelTitle">Facebook Ads</h2>
+          <p class="panel-sub">Generate 3 variasi ads copy siap tayang</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Nama Produk / Layanan</label>
+          <input type="text" id="adsProduct" class="input" placeholder="Contoh: Serum Vitamin C Glow 30ml" maxlength="100">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Detail Produk</label>
+          <textarea id="adsDesc" class="textarea" rows="3" maxlength="300" placeholder="Keunggulan, target audience, harga, promo...&#10;&#10;Contoh: Kulit glowing dalam 7 hari, cocok usia 20-35, harga 89rb, free ongkir min. 2 pcs"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Call to Action</label>
+          <input type="text" id="adsCTA" class="input" placeholder="Contoh: Beli Sekarang, Daftar Gratis, Coba 7 Hari" maxlength="50">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Format Iklan</label>
+          <div id="formatChips" class="tone-list">
+            <!-- Diisi JS -->
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Tujuan Iklan</label>
+          <div class="tone-list">
+            <button class="tone-chip active" data-obj="penjualan langsung">Penjualan</button>
+            <button class="tone-chip" data-obj="brand awareness">Awareness</button>
+            <button class="tone-chip" data-obj="lead generation">Lead Gen</button>
+            <button class="tone-chip" data-obj="traffic ke website atau toko online">Traffic</button>
+            <button class="tone-chip" data-obj="install aplikasi">App Install</button>
+            <button class="tone-chip" data-obj="engagement dan interaksi">Engagement</button>
+          </div>
+        </div>
+
+        <button class="cta-btn" id="adsBtn">
+          <i class="ti ti-sparkles"></i> Generate Ads Copy Sekarang
+        </button>
+
+        <div id="adsResults" class="results-area">
+          <div class="empty-state">
+            <div class="empty-icon"><i class="ti ti-speakerphone"></i></div>
+            <p>Ads copy kamu akan muncul di sini</p>
           </div>
         </div>
       </div>
 
-      <!-- Google Options -->
-      <div class="ads-options" id="googleOptions">
-        <div class="card">
-          <div class="section-label">Format Google Ads</div>
-          <div class="format-grid">
-            <button class="format-btn active" data-format="Responsive Search Ad / RSA (15 headline maks 30 karakter + 4 description maks 90 karakter)">RSA / Search Ad</button>
-            <button class="format-btn" data-format="Display Ad Copy (judul singkat + deskripsi untuk banner display)">Display Ad</button>
-            <button class="format-btn" data-format="Performance Max Asset (headline, description, dan long headline untuk PMax campaign)">Performance Max</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SnackVideo Options -->
-      <div class="ads-options" id="snackOptions">
-        <div class="card">
-          <div class="section-label">Format SnackVideo Ads</div>
-          <div class="format-grid">
-            <button class="format-btn active" data-format="Native Video Script (skrip video iklan native SnackVideo 15-30 detik)">Native Video</button>
-            <button class="format-btn" data-format="Hashtag Challenge Copy (teks tantangan hashtag untuk engagement)">Hashtag Challenge</button>
-            <button class="format-btn" data-format="Splash Screen Ad (teks iklan layar penuh yang muncul saat buka app)">Splash Ad</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-label">Tujuan Iklan</div>
-        <div class="tone-grid">
-          <button class="obj-btn active" data-obj="penjualan langsung"><div class="tone-name">Penjualan</div><div class="tone-desc">Direct selling</div></button>
-          <button class="obj-btn" data-obj="brand awareness"><div class="tone-name">Awareness</div><div class="tone-desc">Kenal produk</div></button>
-          <button class="obj-btn" data-obj="lead generation"><div class="tone-name">Lead Gen</div><div class="tone-desc">Kumpulkan kontak</div></button>
-          <button class="obj-btn" data-obj="traffic ke website atau toko online"><div class="tone-name">Traffic</div><div class="tone-desc">Ke website/toko</div></button>
-          <button class="obj-btn" data-obj="install aplikasi"><div class="tone-name">App Install</div><div class="tone-desc">Download app</div></button>
-          <button class="obj-btn" data-obj="engagement dan interaksi"><div class="tone-name">Engagement</div><div class="tone-desc">Like, komen, share</div></button>
-        </div>
-      </div>
-
-      <button class="generate-btn" id="adsBtn"><i class="ti ti-sparkles"></i> Generate Ads Copy Sekarang</button>
-      <div id="adsResults" class="results">
-        <div class="empty-state"><i class="ti ti-speakerphone"></i><p>Ads copy kamu akan muncul di sini</p></div>
-      </div>
     </div>
+  </main>
 
-    <footer class="footer">Dibuat dengan ❤️ menggunakan Claude AI · KaptenKonten.ai</footer>
-  </div>
+  <footer class="footer">
+    <span>© 2025 KaptenKonten.ai</span>
+    <span>·</span>
+    <span>Dibuat dengan Claude AI</span>
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>

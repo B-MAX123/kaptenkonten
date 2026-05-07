@@ -2,41 +2,71 @@
 let selectedPlatform = 'Instagram';
 let selectedTone = 'Santai & Friendly';
 let selectedAdsPlatform = 'facebook';
-let selectedFormat = 'Primary Text (teks utama iklan feed)';
 let selectedObjective = 'penjualan langsung';
 
-// ===================== MODE TABS =====================
-document.querySelectorAll('.mode-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const mode = tab.dataset.mode;
+const adsFormats = {
+  facebook: [
+    { label: 'Primary Text', value: 'Primary Text (teks utama iklan feed Facebook)' },
+    { label: 'Headline + Desc', value: 'Headline dan Description singkat untuk link ad' },
+    { label: 'Carousel Copy', value: 'Copy untuk setiap slide carousel Facebook Ads' },
+    { label: 'Video Script', value: 'Skrip video iklan Facebook 30-60 detik' },
+  ],
+  tiktok: [
+    { label: 'Hook + Script', value: 'Opening hook kuat + skrip video 15-30 detik TikTok' },
+    { label: 'UGC Style', value: 'Skrip gaya konten organik user-generated TikTok' },
+    { label: 'Trending Sound', value: 'Skrip yang cocok dengan audio trending TikTok' },
+    { label: 'TopView', value: 'Skrip iklan full-screen TopView TikTok' },
+  ],
+  google: [
+    { label: 'Search Ad (RSA)', value: 'Responsive Search Ad: 5 headline maks 30 karakter + 3 description maks 90 karakter' },
+    { label: 'Display Ad', value: 'Display Ad: judul pendek + deskripsi untuk banner' },
+    { label: 'Performance Max', value: 'Performance Max: headline, long headline, dan description' },
+  ],
+  snack: [
+    { label: 'Native Video', value: 'Skrip video native SnackVideo 15-30 detik' },
+    { label: 'Hashtag Challenge', value: 'Copy hashtag challenge untuk engagement SnackVideo' },
+    { label: 'Splash Ad', value: 'Teks iklan layar penuh splash screen SnackVideo' },
+  ],
+};
+
+let selectedFormat = adsFormats.facebook[0].value;
+
+// ===================== MODE SWITCHING =====================
+document.querySelectorAll('.sidebar-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.mode;
     document.getElementById('captionMode').style.display = mode === 'caption' ? 'block' : 'none';
     document.getElementById('adsMode').style.display = mode === 'ads' ? 'block' : 'none';
+    document.getElementById('adsPlatformNav').style.display = mode === 'ads' ? 'block' : 'none';
   });
 });
 
-// ===================== CAPTION MODE =====================
-document.querySelectorAll('.platform-btn').forEach(btn => {
+// ===================== CAPTION: PLATFORM =====================
+document.querySelectorAll('.chip[data-platform]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.chip[data-platform]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedPlatform = btn.dataset.platform;
   });
 });
 
-document.querySelectorAll('.tone-btn').forEach(btn => {
+// ===================== CAPTION: TONE =====================
+document.querySelectorAll('.tone-chip[data-tone]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tone-chip[data-tone]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedTone = btn.dataset.tone;
   });
 });
 
+// ===================== CAPTION: CHAR COUNT =====================
 document.getElementById('captionTopic').addEventListener('input', function () {
   document.getElementById('captionCharCount').textContent = this.value.length;
 });
 
+// ===================== CAPTION: GENERATE =====================
 document.getElementById('captionBtn').addEventListener('click', generateCaptions);
 
 async function generateCaptions() {
@@ -46,8 +76,7 @@ async function generateCaptions() {
   const emoji = document.getElementById('emojiSelect').value;
   const hashtag = document.getElementById('hashtagSelect').value;
   const btn = document.getElementById('captionBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2"></i> Generating...';
+  setLoading(btn, true, 'captionBtn');
   showLoading('captionResults', 'AI sedang menulis 3 caption terbaik untukmu...');
 
   const prompt = `Kamu adalah copywriter Indonesia yang ahli membuat caption media sosial yang engaging dan viral.
@@ -72,84 +101,77 @@ CAPTION 3:
 Buat setiap caption unik, berbeda pendekatan, dan benar-benar siap pakai. Sesuaikan panjang caption dengan karakteristik platform ${selectedPlatform}.`;
 
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    });
-    if (!response.ok) { const e = await response.json(); throw new Error(e.message || 'Server error'); }
-    const data = await response.json();
-    const captions = parseSections(data.text, 'CAPTION');
-    if (captions.length === 0) { showError('captionResults', 'Gagal memparse caption. Coba lagi ya!'); }
-    else { renderCards('captionResults', captions, `${selectedPlatform} · ${selectedTone}`, 'Variasi'); }
-  } catch (err) {
-    showError('captionResults', 'Terjadi kesalahan: ' + err.message);
+    const text = await callAPI(prompt);
+    const items = parseSections(text, 'CAPTION');
+    if (!items.length) showError('captionResults', 'Gagal memparse caption. Coba lagi!');
+    else renderResults('captionResults', items, `${selectedPlatform} · ${selectedTone}`);
+  } catch (e) {
+    showError('captionResults', 'Terjadi kesalahan: ' + e.message);
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-sparkles"></i> Generate 3 Caption Sekarang';
+    setLoading(btn, false, 'captionBtn', '<i class="ti ti-sparkles"></i> Generate Caption Sekarang');
   }
 }
 
-// ===================== ADS MODE =====================
-document.querySelectorAll('.ads-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.ads-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    selectedAdsPlatform = tab.dataset.ads;
-
-    // Show/hide options
-    document.querySelectorAll('.ads-options').forEach(o => o.classList.remove('active'));
-    document.getElementById(selectedAdsPlatform + 'Options').classList.add('active');
-
-    // Reset format to first active
-    const firstFormat = document.querySelector(`#${selectedAdsPlatform}Options .format-btn`);
-    if (firstFormat) {
-      document.querySelectorAll(`#${selectedAdsPlatform}Options .format-btn`).forEach(b => b.classList.remove('active'));
-      firstFormat.classList.add('active');
-      selectedFormat = firstFormat.dataset.format;
-    }
-  });
-});
-
-document.querySelectorAll('.format-btn').forEach(btn => {
+// ===================== ADS: PLATFORM =====================
+document.querySelectorAll('.sidebar-platform').forEach(btn => {
   btn.addEventListener('click', () => {
-    const parentOptions = btn.closest('.ads-options');
-    parentOptions.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sidebar-platform').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    selectedFormat = btn.dataset.format;
+    selectedAdsPlatform = btn.dataset.ads;
+    renderFormatChips(selectedAdsPlatform);
+    const names = { facebook: 'Facebook Ads', tiktok: 'TikTok Ads', google: 'Google Ads', snack: 'SnackVideo Ads' };
+    document.getElementById('adsPanelTitle').textContent = names[selectedAdsPlatform];
   });
 });
 
-document.querySelectorAll('.obj-btn').forEach(btn => {
+function renderFormatChips(platform) {
+  const container = document.getElementById('formatChips');
+  const formats = adsFormats[platform];
+  container.innerHTML = formats.map((f, i) =>
+    `<button class="tone-chip ${i === 0 ? 'active' : ''}" data-format="${f.value}">${f.label}</button>`
+  ).join('');
+  selectedFormat = formats[0].value;
+  container.querySelectorAll('.tone-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.tone-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedFormat = btn.dataset.format;
+    });
+  });
+}
+
+// Init formats
+renderFormatChips('facebook');
+
+// ===================== ADS: OBJECTIVE =====================
+document.querySelectorAll('.tone-chip[data-obj]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.obj-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tone-chip[data-obj]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedObjective = btn.dataset.obj;
   });
 });
 
+// ===================== ADS: GENERATE =====================
 document.getElementById('adsBtn').addEventListener('click', generateAds);
 
 async function generateAds() {
   const product = document.getElementById('adsProduct').value.trim();
   const desc = document.getElementById('adsDesc').value.trim();
   const cta = document.getElementById('adsCTA').value.trim();
-
   if (!product) { showError('adsResults', 'Tolong isi nama produk dulu ya!'); return; }
 
-  const platformNames = { facebook: 'Facebook Ads', tiktok: 'TikTok Ads', google: 'Google Ads', snack: 'SnackVideo Ads' };
-  const platformName = platformNames[selectedAdsPlatform];
-
+  const names = { facebook: 'Facebook Ads', tiktok: 'TikTok Ads', google: 'Google Ads', snack: 'SnackVideo Ads' };
+  const platformName = names[selectedAdsPlatform];
   const btn = document.getElementById('adsBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2"></i> Generating...';
-  showLoading('adsResults', `AI sedang membuat ${platformName} copy terbaik untukmu...`);
+  setLoading(btn, true, 'adsBtn');
+  showLoading('adsResults', `AI sedang membuat ${platformName} copy terbaik...`);
 
   const prompt = `Kamu adalah senior copywriter dan digital ads specialist Indonesia yang ahli membuat iklan yang convert tinggi.
 
 Buat TEPAT 3 variasi ads copy untuk ${platformName} dengan detail berikut:
 - Produk/Layanan: ${product}
-- Detail produk: ${desc || 'tidak disebutkan, buat yang general'}
+- Detail produk: ${desc || 'tidak disebutkan, buat yang general dan persuasif'}
 - Format iklan: ${selectedFormat}
 - Tujuan iklan: ${selectedObjective}
 - CTA: ${cta || 'sesuaikan dengan tujuan iklan'}
@@ -165,67 +187,75 @@ COPY 2:
 COPY 3:
 [isi ads copy ketiga lengkap sesuai format yang diminta]
 
-Pastikan setiap copy:
-- Unik dan berbeda pendekatan
-- Sesuai karakteristik dan batasan ${platformName}
-- Mengandung elemen persuasif yang tepat (pain point, benefit, social proof, urgency, CTA)
-- Siap langsung digunakan sebagai iklan`;
+Pastikan setiap copy unik, berbeda pendekatan, sesuai karakteristik ${platformName}, mengandung elemen persuasif (pain point, benefit, urgency, CTA), dan siap langsung digunakan.`;
 
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    });
-    if (!response.ok) { const e = await response.json(); throw new Error(e.message || 'Server error'); }
-    const data = await response.json();
-    const copies = parseSections(data.text, 'COPY');
-    if (copies.length === 0) { showError('adsResults', 'Gagal memparse ads copy. Coba lagi ya!'); }
-    else { renderCards('adsResults', copies, `${platformName} · ${selectedObjective}`, 'Variasi'); }
-  } catch (err) {
-    showError('adsResults', 'Terjadi kesalahan: ' + err.message);
+    const text = await callAPI(prompt);
+    const items = parseSections(text, 'COPY');
+    if (!items.length) showError('adsResults', 'Gagal memparse copy. Coba lagi!');
+    else renderResults('adsResults', items, `${platformName} · ${selectedObjective}`);
+  } catch (e) {
+    showError('adsResults', 'Terjadi kesalahan: ' + e.message);
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-sparkles"></i> Generate Ads Copy Sekarang';
+    setLoading(btn, false, 'adsBtn', '<i class="ti ti-sparkles"></i> Generate Ads Copy Sekarang');
   }
 }
 
 // ===================== HELPERS =====================
-function parseSections(text, keyword) {
-  const results = [];
-  const parts = text.split(new RegExp(`${keyword} \\d+:`, 'i')).filter(s => s.trim());
-  parts.forEach(part => { const clean = part.trim(); if (clean) results.push(clean); });
-  return results;
+async function callAPI(prompt) {
+  const res = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Server error'); }
+  const data = await res.json();
+  return data.text;
 }
 
-function renderCards(containerId, items, badge, label) {
-  const html = `
+function parseSections(text, keyword) {
+  const parts = text.split(new RegExp(`${keyword} \\d+:`, 'i')).filter(s => s.trim());
+  return parts.map(p => p.trim()).filter(Boolean);
+}
+
+function renderResults(containerId, items, badge) {
+  const labels = ['Variasi 1', 'Variasi 2', 'Variasi 3'];
+  document.getElementById(containerId).innerHTML = `
     <div class="result-header">
-      <div class="result-title">Siap dipakai ✨</div>
+      <div class="result-title">Siap dipakai ✦</div>
       <div class="result-badge">${badge}</div>
     </div>
     ${items.map((c, i) => `
-      <div class="caption-card">
-        <div class="caption-number">${label} ${i + 1}</div>
-        <div class="caption-text" id="item-${containerId}-${i}">${escapeHtml(c)}</div>
-        <div class="caption-actions">
-          <button class="action-btn" onclick="copyItem('${containerId}', ${i}, this)">
+      <div class="result-card">
+        <div class="result-card-label">${labels[i] || 'Variasi ' + (i+1)}</div>
+        <div class="result-card-text" id="rc-${containerId}-${i}">${escapeHtml(c)}</div>
+        <div class="result-card-actions">
+          <button class="copy-btn" onclick="copyResult('${containerId}', ${i}, this)">
             <i class="ti ti-copy"></i> Salin
           </button>
         </div>
       </div>
     `).join('')}
   `;
-  document.getElementById(containerId).innerHTML = html;
 }
 
-function copyItem(containerId, idx, btn) {
-  const text = document.getElementById(`item-${containerId}-${idx}`).textContent;
+function copyResult(containerId, idx, btn) {
+  const text = document.getElementById(`rc-${containerId}-${idx}`).textContent;
   navigator.clipboard.writeText(text).then(() => {
     btn.classList.add('copied');
     btn.innerHTML = '<i class="ti ti-check"></i> Tersalin!';
     setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<i class="ti ti-copy"></i> Salin'; }, 2000);
   });
+}
+
+function setLoading(btn, isLoading, id, resetHTML) {
+  if (isLoading) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader-2"></i> Generating...';
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = resetHTML;
+  }
 }
 
 function showLoading(containerId, msg) {
