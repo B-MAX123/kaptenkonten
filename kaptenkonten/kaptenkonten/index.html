@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KaptenKonten.ai — AI Caption Generator Bahasa Indonesia</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon"><i class="ti ti-writing"></i></div>
+        <div class="logo-text">Kapten<span>Konten</span>.ai</div>
+      </div>
+      <p class="tagline">Generate caption AI dalam Bahasa Indonesia — cepat, kreatif, siap pakai</p>
+    </header>
+
+    <!-- FORM -->
+    <main class="form-area">
+
+      <!-- Platform -->
+      <div class="card">
+        <div class="section-label">Platform</div>
+        <div class="platform-grid">
+          <button class="platform-btn active" data-platform="Instagram">
+            <i class="ti ti-brand-instagram"></i><span>Instagram</span>
+          </button>
+          <button class="platform-btn" data-platform="TikTok">
+            <i class="ti ti-brand-tiktok"></i><span>TikTok</span>
+          </button>
+          <button class="platform-btn" data-platform="Facebook">
+            <i class="ti ti-brand-facebook"></i><span>Facebook</span>
+          </button>
+          <button class="platform-btn" data-platform="Twitter/X">
+            <i class="ti ti-brand-x"></i><span>Twitter/X</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tone -->
+      <div class="card">
+        <div class="section-label">Tone / Gaya Bahasa</div>
+        <div class="tone-grid">
+          <button class="tone-btn active" data-tone="Santai & Friendly">
+            <div class="tone-name">Santai</div>
+            <div class="tone-desc">Casual, akrab</div>
+          </button>
+          <button class="tone-btn" data-tone="Profesional">
+            <div class="tone-name">Profesional</div>
+            <div class="tone-desc">Formal, terpercaya</div>
+          </button>
+          <button class="tone-btn" data-tone="Lucu & Playful">
+            <div class="tone-name">Lucu</div>
+            <div class="tone-desc">Humor, receh</div>
+          </button>
+          <button class="tone-btn" data-tone="Inspiratif & Motivasi">
+            <div class="tone-name">Inspiratif</div>
+            <div class="tone-desc">Motivasi, touching</div>
+          </button>
+          <button class="tone-btn" data-tone="Jualan / Promosi">
+            <div class="tone-name">Promosi</div>
+            <div class="tone-desc">CTA, jualan</div>
+          </button>
+          <button class="tone-btn" data-tone="Storytelling">
+            <div class="tone-name">Storytelling</div>
+            <div class="tone-desc">Cerita, narrative</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="card">
+        <div class="section-label">Informasi Konten</div>
+        <textarea id="topicInput" rows="3" maxlength="500"
+          placeholder="Jelaskan produk, topik, atau momen yang ingin dibuat caption-nya...
+Contoh: launching skincare untuk kulit berminyak, harga 89rb"></textarea>
+        <div class="char-count"><span id="charCount">0</span>/500</div>
+        <div class="row">
+          <select id="emojiSelect">
+            <option value="dengan emoji">Pakai Emoji</option>
+            <option value="tanpa emoji">Tanpa Emoji</option>
+          </select>
+          <select id="hashtagSelect">
+            <option value="dengan hashtag yang relevan">Pakai Hashtag</option>
+            <option value="tanpa hashtag">Tanpa Hashtag</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="generate-btn" id="generateBtn">
+        <i class="ti ti-sparkles"></i>
+        Generate 3 Caption Sekarang
+      </button>
+
+      <!-- Results -->
+      <div id="results" class="results">
+        <div class="empty-state">
+          <i class="ti ti-writing-sign"></i>
+          <p>Caption kamu akan muncul di sini</p>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="footer">
+      Dibuat dengan ❤️ menggunakan Claude AI · KaptenKonten.ai
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
